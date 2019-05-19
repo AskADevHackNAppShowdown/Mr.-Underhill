@@ -102,6 +102,15 @@ const MovieFinder = props => {
                                 {addReview === index &&
                                 <form onSubmit = {e => {
                                     e.preventDefault()
+                                    setAddReview(-1)
+                                    movie.numReviews +=1
+                                    movie.reviews.push(
+                                        {
+                                            author: thisAuthor,
+                                            rating: thisRating,
+                                            message: thisReview
+                                        }
+                                    )
                                     fetch('http://localhost:1987/review', {
                                         method: 'POST', // or 'PUT'
                                         body: JSON.stringify({
