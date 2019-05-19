@@ -18,7 +18,9 @@ const styles = {
   };
 
 const MovieFinder = props => {
-
+    const [thisAuthor, setThisAuthor] = useState('')
+    const [thisRating, setThisRating] = useState('')
+    const [thisReview, setThisReview] = useState('')
     const [showReviews, setShowReviews] = useState([])
     const [addReview, setAddReview] = useState(-1)
     const { classes, reviews } = props
@@ -100,10 +102,24 @@ const MovieFinder = props => {
                                 {addReview === index &&
                                 <form onSubmit = {e => {
                                     e.preventDefault()
+                                    fetch('http://localhost:1987/review', {
+                                        method: 'POST', // or 'PUT'
+                                        body: JSON.stringify({
+                                            tmdbId: movie.id,
+                                            author: thisAuthor,
+                                            rating: thisRating,
+                                            message: thisReview
+                                        }), 
+                                        headers:{
+                                          'Content-Type': 'application/json'
+                                        }
+                                      }).then(res => res.json())
+                                      .then(response => console.log('Success:', JSON.stringify(response)))
+                                      .catch(error => console.error('Error:', error));
                                 }}>
-                                <div><label>Author: </label><input/></div>
-                                <div><label>Rating: </label><input type="number" max="5" min="1"/></div>
-                                <div><label>Review: </label><input/></div>
+                                <div><label>Author: </label><input value={thisAuthor} onChange={e => setThisAuthor(e.target.value)}/></div>
+                                <div><label>Rating: </label><input value={thisRating} onChange={e => setThisRating(e.target.value)} type="number" max="5" min="1"/></div>
+                                <div><label>Review: </label><input value={thisReview} onChange={e => setThisReview(e.target.value)}/></div>
                                 <button type="submit">Submit Review</button>
                                 </form>}
                             </CardContent>
