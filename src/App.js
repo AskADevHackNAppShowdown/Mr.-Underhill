@@ -10,7 +10,6 @@ function App() {
     <div>
       <Nav></Nav>
       <MovieFinder />
-      <div>Hello World</div>
     </div>
   )
 }
