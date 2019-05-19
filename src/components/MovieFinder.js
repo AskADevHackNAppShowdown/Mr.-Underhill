@@ -32,7 +32,7 @@ const MovieFinder = props => {
         Year: "2008",
         imdbID: "tt1286537"
     }
-    const [searchText, setSearchText] = useState('food')
+    const [searchText, setSearchText] = useState('')
     const [movies, setMovies] = useState([])
     const apiKey = "aa1ce36898e53cf79394f7c59ef6ddbc"
     function handleSubmit(e) {
