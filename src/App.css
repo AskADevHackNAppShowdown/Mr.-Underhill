@@ -13,6 +13,18 @@ nav > h5 {
   margin: 0px;
 }
 
+.movies {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.movies > div {
+  margin: 20px;
+  min-width: 200px;
+}
+
 body {
   margin-top: 70px;
   margin-left: 20px;
