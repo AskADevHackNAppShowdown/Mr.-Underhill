@@ -17,7 +17,7 @@ const styles = {
   };
 
 const MovieFinder = props => {
-    const { classes } = props
+    const { classes, reviews } = props
     const sampleMovie = {
         Poster: "https://m.media-amazon.com/images/M/MV5BZGNhYTA1ODMtY2M5Yy00MTYwLWFlZmEtNDM4M2I4ZTI2ZmVmXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg",
         Rated: "PG",
@@ -36,6 +36,21 @@ const MovieFinder = props => {
         .then(res => res.json())
         .then(response => {
             console.log(response.results)
+            response.results.forEach(movie => {
+                const tmdbId = movie.id.toString()
+                let numReviews = 0
+                let totalRating = 0
+                reviews.forEach(review => {
+                    if(review.tmdbId == tmdbId) {
+                        numReviews += 1
+                        totalRating += review.rating
+                    }
+                const averageRating = numReviews ? totalRating/numReviews : 'N/A';
+                movie.numReviews = numReviews
+                movie.averageRating = averageRating
+                })
+            })
+            console.log(response.results)
             setMovies(response.results)
         })
       .catch(err => {
@@ -51,7 +66,7 @@ const MovieFinder = props => {
                 <input value={searchText} onChange={e=> setSearchText(e.target.value)} placeholder='Movie Name' />
                 <button type="submit">Search</button>
             </form>
-            <div class='movies'>
+            <div className='movies'>
             {
                 movies.slice(0,12).map((movie, index) => {
                     return (
@@ -68,9 +83,9 @@ const MovieFinder = props => {
                                 <Button size="small" color="primary">
                                 Add Review
                                 </Button>
-                                <Button size="small" color="primary">
-                                View Reviews
-                                </Button>
+                                {movie.numReviews && <Button size="small" color="primary">
+                                {`View Reviews (${movie.numReviews})`}
+                                </Button>}
                             </CardActions>
                         </Card>
                     )

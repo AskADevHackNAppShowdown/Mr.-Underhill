@@ -6,10 +6,21 @@ import MovieFinder from './components/MovieFinder';
 
 function App() {
   
+  const [reviews, setReviews] = useState([])
+  
+  useEffect(()=> {
+    fetch('http://localhost:1987/reviews')
+    .then(response => response.json())
+    .then(res => {
+      console.log(res)
+      setReviews(res)
+    })
+  }, [])
+
   return (
     <div>
       <Nav></Nav>
-      <MovieFinder />
+      <MovieFinder reviews={reviews} />
     </div>
   )
 }
