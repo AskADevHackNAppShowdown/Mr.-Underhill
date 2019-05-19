@@ -28,15 +28,15 @@ const MovieFinder = props => {
     }
     const [searchText, setSearchText] = useState('food')
     const [movies, setMovies] = useState([])
-    const apiKey = "71ea7290"
+    const apiKey = "aa1ce36898e53cf79394f7c59ef6ddbc"
     function handleSubmit(e) {
         e.preventDefault()
         const search = searchText
-        fetch(`http://www.omdbapi.com/?s=${search}&type=movie&apikey=${apiKey}`)
+        fetch(`https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${search}&page=1`)
         .then(res => res.json())
         .then(response => {
-            console.log(response)
-            setMovies(response.Search)
+            console.log(response.results)
+            setMovies(response.results)
         })
       .catch(err => {
         console.error(err)
@@ -53,20 +53,23 @@ const MovieFinder = props => {
             </form>
             <div class='movies'>
             {
-                movies.map(movie => {
+                movies.slice(0,12).map((movie, index) => {
                     return (
-                        <Card className={classes.card}>
+                        <Card key={'movie' + index} className={classes.card}>
                             <CardMedia
                             className={classes.media}
-                            image={movie.Poster}
+                            image={"https://image.tmdb.org/t/p/w300" + movie.poster_path}
                             title="Movie Poster"
                             />
                             <CardContent>
-                                <h2>{movie.Title}</h2>
+                                <h2>{movie.title}</h2>
                             </CardContent>
                             <CardActions>
                                 <Button size="small" color="primary">
                                 Add Review
+                                </Button>
+                                <Button size="small" color="primary">
+                                View Reviews
                                 </Button>
                             </CardActions>
                         </Card>
