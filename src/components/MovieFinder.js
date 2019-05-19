@@ -6,6 +6,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import { tsConstructorType } from '@babel/types';
 
 const styles = {
     card: {
@@ -17,6 +18,9 @@ const styles = {
   };
 
 const MovieFinder = props => {
+
+    const [showReviews, setShowReviews] = useState([])
+    const [addReview, setAddReview] = useState(-1)
     const { classes, reviews } = props
     const sampleMovie = {
         Poster: "https://m.media-amazon.com/images/M/MV5BZGNhYTA1ODMtY2M5Yy00MTYwLWFlZmEtNDM4M2I4ZTI2ZmVmXkEyXkFqcGdeQXVyNTA4NzY1MzY@._V1_SX300.jpg",
@@ -40,13 +44,16 @@ const MovieFinder = props => {
                 const tmdbId = movie.id.toString()
                 let numReviews = 0
                 let totalRating = 0
+                let myReviews = []
                 reviews.forEach(review => {
                     if(review.tmdbId == tmdbId) {
                         numReviews += 1
                         totalRating += review.rating
+                        myReviews.push({message: review.message, rating:review.rating, author: review.author})
                     }
                 const averageRating = numReviews ? totalRating/numReviews : 'N/A';
                 movie.numReviews = numReviews
+                movie.reviews= myReviews
                 movie.averageRating = averageRating
                 })
             })
@@ -78,12 +85,40 @@ const MovieFinder = props => {
                             />
                             <CardContent>
                                 <h2>{movie.title}</h2>
+                                {showReviews.indexOf(index) !== -1 && 
+                                movie.reviews.map(review => {
+                                    return (
+                                        <div>
+                                            <p>{`Rating: ${review.rating}`}</p>
+                                            <p>{`Author: ${review.author}`}</p>
+                                            <p>{`Review: ${review.message}`}</p>
+                                        </div>
+                                    )
+                                }
+                                )
+                                }
+                                {addReview === index &&
+                                <form onSubmit = {e => {
+                                    e.preventDefault()
+                                }}>
+                                <div><label>Author: </label><input/></div>
+                                <div><label>Rating: </label><input type="number" max="5" min="1"/></div>
+                                <div><label>Review: </label><input/></div>
+                                <button type="submit">Submit Review</button>
+                                </form>}
                             </CardContent>
                             <CardActions>
-                                <Button size="small" color="primary">
+                                <Button size="small" color="primary"
+                                onClick={e => {
+                                    setAddReview(index)
+                                }}>
                                 Add Review
                                 </Button>
-                                {movie.numReviews && <Button size="small" color="primary">
+                                {movie.numReviews && <Button size="small" color="primary" onClick={(e)=> {
+                                    const reviewsToShow = showReviews.slice()
+                                    reviewsToShow.push(index)
+                                    setShowReviews(reviewsToShow)
+                                 }}>
                                 {`View Reviews (${movie.numReviews})`}
                                 </Button>}
                             </CardActions>
